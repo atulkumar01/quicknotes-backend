@@ -20,8 +20,8 @@ public class NoteController {
     @Autowired
     private NoteService noteService;
 
-    @Autowired
-    private KafkaProducerService kafkaProducerService;
+   // @Autowired
+  //  private KafkaProducerService kafkaProducerService;
 
     @PostMapping
     public ResponseEntity<Note> createNote(@RequestBody Note note) {
@@ -29,7 +29,7 @@ public class NoteController {
         Note savedNote = noteService.saveOrUpdate(note);
 
         String message = "NOTE_CREATED:id=" + savedNote.getId() + ",title=" + savedNote.getTitle();
-        kafkaProducerService.publishNoteCreated(message);
+      //  kafkaProducerService.publishNoteCreated(message);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedNote);
     }
@@ -56,6 +56,49 @@ public class NoteController {
         noteService.deleteNoteById(id);
         return ResponseEntity.status(HttpStatus.OK).body("Note Deleted Successfully");
     }
+
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Note> updteNoteById(@PathVariable Long id, @RequestBody Note updatedNote)
+    {
+
+        Optional<Note> existedNote = noteService.getNoteById(id);
+
+        if(existedNote.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        Note note   = existedNote.get();
+        note.setTitle(updatedNote.getTitle());
+        note.setDescription(updatedNote.getDescription());
+
+        Note savedNote = noteService.saveOrUpdate(note);
+
+        return ResponseEntity.ok(savedNote);
+    }
+
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Note> updateNote(@PathVariable Long id, @RequestBody Note updatedNote)
+    {
+        Optional<Note> existedNote = noteService.getNoteById(id);
+        if(existedNote.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        Note note   = existedNote.get();
+
+        if(updatedNote.getTitle() != null) {
+            note.setTitle(updatedNote.getTitle());
+        }
+        if(updatedNote.getDescription() != null) {
+            note.setDescription(updatedNote.getDescription());
+        }
+
+        Note savedNote = noteService.saveOrUpdate(note);
+        return ResponseEntity.ok(savedNote);
+    }
+
 
 
 

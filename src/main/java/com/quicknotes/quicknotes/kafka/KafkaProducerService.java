@@ -1,7 +1,9 @@
 package com.quicknotes.quicknotes.kafka;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+@ConditionalOnProperty(name = "kafka.enabled", havingValue = "true", matchIfMissing = false)
 @Service
 public class KafkaProducerService {
 

@@ -4,6 +4,7 @@ package com.quicknotes.quicknotes.service;
 import com.quicknotes.quicknotes.entity.Note;
 import com.quicknotes.quicknotes.repository.NoteRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
